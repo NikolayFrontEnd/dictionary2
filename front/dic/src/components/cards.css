@@ -1,0 +1,209 @@
+/* THE MAINCONTAINER HOLDS EVERYTHING */
+.maincontainer {
+    margin: 60px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 карточки в строке */
+    gap: 60px; /* пространство между карточками */
+}
+
+.thecard {
+    position: relative;
+    width: 100%; /* изменено на 100% */
+    max-width: 250px; /* добавлено для предотвращения переноса на новую строку */
+    height: 250px;
+    border-radius: 10px;
+    transform-style: preserve-3d;
+    transition: all 0.8s ease;
+}
+
+/* THE PSUEDO CLASS CONTROLS THE FLIP ON MOUSEOVER AND MOUSEOUT */
+.thecard:hover {
+    transform: rotateY(180deg);
+}
+
+/* THE FRONT FACE OF THE CARD, WHICH SHOWS BY DEFAULT */
+.thefront {
+    display: flex;
+    justify-content: center; /* выравнивание текста по горизонтали по центру */
+    align-items: center; /* выравнивание текста по вертикали по центру */
+    /* убрано абсолютное позиционирование */
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: #ffc728;
+    color: #000;
+}
+
+
+/* THE BACK FACE OF THE CARD, WHICH SHOWS ON MOUSEOVER */
+.theback {
+    display: flex; /* добавлено */
+    flex-direction: column; /* добавлено */
+    justify-content: center; /* добавлено */
+    align-items: center; /* добавлено */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background:  #4CAF50;
+    color: #333;
+    text-align: center;
+    transform: rotateY(180deg);
+}
+
+/*This block (starts here) is merely styling for the flip card, and is NOT an essential part of the flip code */
+.thefront h1, .theback h1 {
+    font-family: 'zilla slab', sans-serif;
+    padding: 30px;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+}
+
+.thefront p, .theback p {
+    font-family: 'zilla slab', sans-serif;
+    padding: 30px;
+    font-weight: normal;
+    font-size: 12px;
+    text-align: center;
+}
+
+.custom-button {
+    margin-left: 35px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background-color: #28a745;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-button:hover {
+    background-color: #218838;
+  }
+  
+  .arrow-icon {
+    margin-right: 8px;
+    font-size: 30px;
+  }
+  .lastsection{
+    display: flex;
+  }
+  .custom-button2{
+    margin-left: 435px;
+    height: 55px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background-color: #28a745;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+ .custom-button2:hover {
+    background-color: #218838;
+  }
+
+
+
+  :root {
+    --error-color: #db5b81;
+  }
+  .btn {
+    background-color: #fff;
+    color: var(--primary-color);
+    font-family: inherit;
+    font-weight: bold;
+    padding: 1rem;
+    margin: 1rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+  
+  .btn:focus {
+    outline: none;
+  }
+  
+  .btn:active {
+    transform: scale(0.98);
+  }
+  
+  #toasts {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .toast {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    color: #929292;
+    font-size: 14px;
+    min-width: 500px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    transform: translateX(150%);
+    animation: slideIn 4s ease-in-out;
+  }  
+  .toast span {
+    display: block;
+    font-weight: 800;
+    color: #000;
+  }
+  
+  .toast.error {
+    border-left: 5px solid var(--error-color);
+  }
+  
+  .toast.error i {
+    color: var(--error-color);
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateX(150%);
+    }
+  
+    10%,
+    90% {
+      transform: translateX(0);
+    }
+  
+    100% 
+    {
+      transform: translateX(100%);
+    }
+  }
+
+  .iconError{
+    margin-right: 15px;
+    color:  #db5b81;
+    font-size: 23px;
+  }

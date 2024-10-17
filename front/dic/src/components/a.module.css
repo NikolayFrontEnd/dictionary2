@@ -1,0 +1,83 @@
+.cont{
+display: block;
+justify-content: center;
+align-items: center;
+}
+.bottonBlock{
+    margin-left: 900px;
+}
+.block {
+    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.leftBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 60px; /* Увеличиваем внутренний отступ */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1); /* Увеличиваем размер тени */
+    width: 400px; /* Увеличиваем ширину блока */
+}
+.rightBlock {
+    background-color: #28a745;
+    color: #fff;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding: 30px; /* Увеличиваем внутренний отступ */
+    font-size: 24px; /* Увеличиваем размер текста */
+}
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 15px; /* Увеличиваем внутренний отступ */
+    margin-bottom: 30px; /* Увеличиваем отступ между инпутами */
+    border: none;
+    border-radius: 25px; /* Увеличиваем радиус скругления углов */
+    background-color: #f5f5f5;
+    transition: all 0.3s ease-in-out;
+}
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); /* Увеличиваем размер тени при наведении */
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    outline: none;
+}
+.btn{
+	transition: all .5s ease;
+	width: 150px;
+    height: 50px;
+	border-radius: 30px;
+	color:#008080;
+	font-weight: 600;
+	background-color: #fff;
+	border: 1px solid #28a745;
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+}
+.btn:hover, .btn:focus{
+	background-color: #28a745;
+	color:#fff;
+}
+.link {
+    padding-top: 30px; /* Увеличиваем отступ сверху */
+    display: block;
+    margin-top: 20px; /* Увеличиваем отступ сверху между кнопкой и ссылкой */
+    text-decoration: none;
+    color: #007bff;
+    font-size: 18px; /* Увеличиваем размер текста */
+    transition: color 0.3s;
+}
+.link:hover {
+    color: #0056b3;
+}

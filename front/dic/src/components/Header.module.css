@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4CAF50; /* Зеленый фон */
+    padding: 20px;
+    color: white;
+  }
+  
+  .menu {
+    font-size: 21px;
+    display: flex;
+    gap: 60px; /* Расстояние между элементами меню */
+  }
+  
+  .menu div {
+    cursor: pointer;
+    transition: transform 0.2s; /* Анимация */
+  }
+  
+  .menu div:hover {
+    transform: scale(1.1); /* Увеличение при наведении */
+  }
+  
+  .active {
+    margin-top: 5px;
+    border-bottom: 3px solid yellow; /* Выделение активного элемента */
+  }
+  
+  .userName {
+    font-size: 21px;
+    background-color: #f0f0f0; /* Светлый фон для имени пользователя */
+    color: #333; /* Темный текст */
+    padding: 10px 20px;
+    border-radius: 20px; /* Скругленные углы */
+    font-weight: bold; /* Жирный шрифт */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Тень для выделения */
+  }
+  
+  a {
+    color: inherit; /* Inherit color from parent */
+    text-decoration: none; /* Remove underline */
+  }

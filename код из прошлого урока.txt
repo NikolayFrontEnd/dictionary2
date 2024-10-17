@@ -1,0 +1,538 @@
+.....
+userControllers:
+
+import express from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import mongoose from 'mongoose';
+import { validationResult } from 'express-validator';
+import UserModel from '../models/user.js';
+
+
+export const login = async (req, res)=>{
+    try{
+      const user = await UserModel.findOne({
+  email:req.body.email
+      });
+  
+      if(!user){
+        return res.status(404).json({
+          message: 'Пользователь не найден',
+        });
+      }
+  
+      const isValidPass=await bcrypt.compare(req.body.password, user._doc.passwordHash);
+  if(!isValidPass){
+    return res.status(404).json({
+      message: 'Неверный логин или пароль',
+    });
+  }
+  
+  const token = jwt.sign({
+    _id: user._id,
+  }, 
+  'secret123',
+  {
+    expiresIn: '30d',
+  },
+  
+  );
+  
+  const {passwordHash, ...userData} = user._doc;
+  
+  
+      res.json({
+        ...userData,
+        token,
+      });
+  
+    }catch(err){
+      res.status(500).json({
+        message: "Не удалось авторизоваться",
+           });
+    }
+  };
+
+  export const register = async(req,res)=>{
+
+    try{
+  /*     const errors = validationResult(req);
+      if(!errors.isEmpty()){
+        return res.status(400).json(errors.array());
+      } */
+    
+      const password = req.body.password;
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(password, salt); 
+      
+    
+    const doc = new UserModel({
+        email: req.body.email,
+        fullName: req.body.fullName,
+        avatarUrl: req.body.avatarUrl,
+       // passwordHash: req.body.passwordHash,
+        passwordHash:hash
+    });
+  
+    
+    const user = await doc.save();
+    
+  const token = jwt.sign({
+    _id: user._id,
+  }, 
+  'secret123',
+  {
+    expiresIn: '30d',
+  },
+  
+  );
+  
+  const {passwordHash, ...userData} = user._doc;
+  
+  
+      res.json({
+        ...userData,
+        token,
+      });
+    }catch(err){
+      console.log(err);
+     res.status(500).json({
+  message: "Не удалось зарегистрирвоаться",
+     });
+    }
+  };
+
+  export const getMe = async(req,res) => {
+    try{
+    const user = await UserModel.findById(req.userId);
+    
+    if(!user){
+      return res.status(404).json({
+        message:"polsovatel ne naiden"
+      });
+     
+    }
+    
+    
+    
+    const {passwordHash, ...userData} = user._doc;
+    
+    
+        res.json(userData);
+    
+    
+    }
+    catch(err){
+    
+    }
+    };
+.....
+/////
+postControllers:
+
+import mongoose from 'mongoose';
+import PostModel from '../models/post.js';
+
+export const getAll = async (req, res) =>{
+try{
+const posts = await PostModel.find().populate('user').exec();
+
+res.json(posts);
+}catch(err){
+    console.log(err);
+    res.status(500).json({
+        message: 'не удалось получить статьи',
+      });
+}
+}
+
+/* export const getOne = async (req, res) => {
+    try {
+      const postId = req.params.id;
+  
+      PostModel.findOneAndUpdate(
+        {
+          _id: postId,
+        },
+        {
+          $inc: { viewsCount: 1 },
+        },
+        {
+          returnDocument: 'after',
+        },
+        (err, doc) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              message: 'Не удалось вернуть статью',
+            });
+          }
+  
+          if (!doc) {
+            return res.status(404).json({
+              message: 'Статья не найдена',
+            });
+          }
+  
+          res.json(doc);
+        },
+      ).populate('user');
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: 'Не удалось получить статьи',
+      });
+    }
+  };   */
+
+  export const getOne = async (req, res) => {
+    try {
+      const postId = req.params.id;
+  
+      const doc = await PostModel.findOneAndUpdate(
+        { _id: postId },
+        { $inc: { viewsCount: 1 } },
+        { new: true } // 'new' используется вместо 'returnDocument'
+      ).populate('user');
+  
+      if (!doc) {
+        return res.status(404).json({
+          message: 'Статья не найдена',
+        });
+      }
+  
+      res.json(doc);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: 'Не удалось получить статьи',
+      });
+    }
+  };
+
+/* export const remove = async(req,res)=>{
+  try{
+const postId = req.params.id;
+PostModel.findOneAndDelete({
+  _id:postId,
+},
+(err,doc)=>{
+  if(err){
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось delete статью',
+    });
+  }
+
+if(!doc){
+  return res.status(500).json({
+    message:"статья не найдена!",
+  });
+}
+
+res.json({
+success:true
+});
+
+}
+)
+  }catch(err){
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить статьи',
+    });
+  }
+} */
+
+export const remove = async (req, res) => 
+{
+  try {
+    const postId = req.params.id;
+
+    const doc = await PostModel.findOneAndDelete({ _id: postId });
+
+    if (!doc) {
+      return res.status(404).json({
+        message: "Статья не найдена!",
+      });
+    }
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось удалить статью',
+    });
+  }
+};
+
+
+export const update = async(req,res)=>{
+  try{
+    const postId = req.params.id;
+    await PostModel.updateOne({
+      _id:postId,
+    },
+    {
+      title: req.body.title,
+text:req.body.text,
+imageUrl:req.body.imageUrl,
+tags:req.body.tags,
+user:req.userId,
+    },
+
+    
+    );
+
+    res.json({
+success:true,
+    });
+  }catch(err){
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось update статью',
+    });
+  }
+} 
+
+export const create = async (req, res) => {
+    try{
+const doc = new PostModel({
+title: req.body.title,
+text:req.body.text,
+imageUrl:req.body.imageUrl,
+tags:req.body.tags,
+user:req.userId,
+});
+
+const post = await doc.save();
+
+res.json(post);
+
+    }
+    catch(err){
+console.log(err);
+res.status(500).json({
+    message: 'Ne udalos sozdati statiy',
+  });
+    }
+}
+////
+
+
+
+[[[[
+index.js: 
+
+import express from "express";
+import multer from 'multer';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import mongoose from 'mongoose';
+import {registerValidator, loginValidator, postCreateValidation} from './validations/auth.js';
+import { validationResult } from 'express-validator';
+import UserModel from './models/user.js';
+import checkAuth from './utils/checkAuth.js';
+import * as UserController from "./controllers/UserController.js";
+import * as PostController from "./controllers/postController.js"
+import handleValidationErrors from './utils/handleValidationError.js'
+import cors from 'cors';
+const app = express();
+
+mongoose.connect('mongodb+srv://nick:donetsk2@cluster0.cjmncrr.mongodb.net/blog')
+        .then(()=>console.log('we have connect with our data of base'))
+        .catch((err)=>console.log('we have error with our connection', err));
+
+app.get("/", (req,res)=>{
+    res.send('hello')
+})
+
+app.use(express.json());
+app.use(cors());
+app.use("/uploads", express.static("uploads"));
+
+
+const storage = multer.diskStorage( {
+    destination: (_, __, cb) =>{
+cb(null, 'uploads');
+    },
+
+filename:  (_, file, cb) =>{
+    cb(null, file.originalname);
+        },
+
+});
+
+const upload = multer({
+    storage
+});
+
+app.post('/upload', checkAuth ,upload.single('image') , (req,res)=>{
+    res.json({
+        url:`/uploads/ ${req.file.originalname}`,
+    })
+});
+
+app.post('/auth/login', loginValidator ,  handleValidationErrors , UserController.login);
+
+app.post('/auth/register', registerValidator , handleValidationErrors , UserController.register);
+
+
+app.get('/auth/me', checkAuth , UserController.getMe);
+
+app.post('/posts', checkAuth ,postCreateValidation, handleValidationErrors , PostController.create);
+app.get('/posts', PostController.getAll );
+app.get('/posts/:id', PostController.getOne);
+app.delete('/posts/:id', checkAuth ,PostController.remove);
+app.patch('/posts/:id', checkAuth, postCreateValidation ,  handleValidationErrors ,PostController.update);
+app.listen(4444,(err)=>{
+    if(err){
+        return console.log(err);
+    }
+    console.log('server Ok');
+});
+
+]]]]
+
+
+{{{{{
+auth.js:
+
+import { body } from 'express-validator';
+
+export const registerValidator = [
+body('email', 'неверный формат почты').isEmail(),
+body('password', 'пароль должен быть минимум 5 симвоволов').isLength({min:5}),
+body('fullName', 'имя должен быть минимум 5 симвоволов').isLength({min:3}),
+body('avatarUrl').optional().isURL(),
+];
+
+
+export const loginValidator = [
+    body('email', 'неверный формат почты').isEmail(),
+    body('password', 'пароль должен быть минимум 5 симвоволов').isLength({min:5}),
+    ];
+
+    export const postCreateValidation = [
+        body('title', 'Введите заголовок статьи').isLength({min:3}).isString(),
+        body('text', 'Введите текст статьи').isLength({min:3}).isString(),
+        body('tags', 'Неверный формат тэгов').optional().isString(),
+        body('imageUrl' , 'Неверная ссылка на изображение').optional().isString(),
+    ]
+
+}}}}}
+
+
+??????/
+checkauth.js
+
+import jwt from 'jsonwebtoken';
+
+export default (req,res,next)=>{
+    const token = (req.headers.authorization || '').replace(/Bearer\s?/,'');
+
+if(token){
+try{
+    const decoded = jwt.verify(token, 'secret123');
+
+    req.userId = decoded._id;
+    next();
+}catch(e){
+    console.log(e);
+    return res.status(403).json({
+        message: "Net dostupa",
+    });
+}
+}
+
+else{
+    return res.status(403).json({
+         message: "Net dostup",
+     })
+ }
+
+}
+
+??????/
+
+.........
+jandlevalidationerror.js
+
+import { validationResult } from 'express-validator';
+export default (req,res,next) =>  {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).json(errors.array());
+    }
+    next();
+};
+........
+
+
+,,,,,,,,,
+схема для постов и для юзеров:
+import mongoose from 'mongoose';
+
+const UserSchema = new mongoose.Schema({
+fullName: {
+    type: String,
+    required: true,
+},
+email: {
+    type: String,
+    required: true,
+    unique:true,  
+},
+passwordHash:{
+type: String,
+required: true,
+},
+
+avatarUrl:String,
+}, 
+{
+timestamps: true,
+
+},
+); 
+
+export default mongoose.model('User', UserSchema)
+
+
+
+import mongoose from 'mongoose';
+
+const PostSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    tags: {
+      type: Array,
+      default: [],
+    },
+    viewsCount: {
+      type: Number,
+      default: 0,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    imageUrl: String,
+  },
+  {
+    timestamps: true,
+  },
+);
+
+export default mongoose.model('Post', PostSchema);
+,,,,,,,,

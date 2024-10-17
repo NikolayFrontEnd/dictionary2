@@ -1,0 +1,71 @@
+
+/* Card.module.css */
+.card {
+  width: 250px;
+  height: 250px;
+  background-color: #78c850; /* Зеленый цвет */
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Тень */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease; /* Плавное изменение цвета фона */
+}
+
+.card:hover {
+  background-color: #5eab3c; /* Измененный цвет фона при наведении */
+}
+
+.card span {
+  font-size: 28px;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+}
+
+.container {
+  margin: 60px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 60px;
+}
+
+
+.btn{
+  font-family:monospace;
+  margin-top: 60px;
+  margin-left: 650px ;
+ font-size: 17px;
+  height:75px;
+  width:200px;
+  border:none;
+  border-radius:50px;
+  transition:0.3s;
+  background-color:rgba(156, 161, 160,0.3);
+  animation: glow 1s infinite ;
+  transition:0.5s;
+}
+
+span:hover{
+    transition: 0.3s;
+    opacity: 1;
+    font-weight: 700;
+    }
+.btn:hover{
+  transform:translateX(-20px)rotate(30deg);
+  border-radius:5px;
+  background-color:#c3bacc;
+  transition:0.5s;
+}
+
+@keyframes glow{
+  0%{
+  box-shadow: 5px 5px 20px rgb(194, 209, 32),-5px -5px 20px rgb(194, 209, 32);}
+  
+  50%{
+  box-shadow: 5px 5px 20px  #00ff1a,-5px -5px 20px  #00ff1a
+  }
+  100%{
+  box-shadow: 5px 5px 20px  rgb(194, 209, 32),-5px -5px 20px  rgb(194, 209, 32)
+  }
+}
